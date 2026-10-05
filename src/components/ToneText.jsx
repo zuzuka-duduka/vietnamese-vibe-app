@@ -1,3 +1,4 @@
+import { AGE_PRONOUNS, splitWithPronouns } from '../lib/pronouns.js'
 import { TONES, detectTone } from '../lib/tones.js'
 
 const hasLetters = (s) => /\p{L}/u.test(s)
@@ -24,20 +25,25 @@ export function ToneSyllable({ text, isFocus = true }) {
 }
 
 // Компактный вариант для предложений: каждый слог подчёркнут цветом тона, название — в подсказке
-export function ToneText({ text }) {
+// Обращения по возрасту (anh, chị, em...) дополнительно подсвечиваются фоном.
+// tones={false} — только подсветка обращений, без цветных подчёркиваний тонов.
+export function ToneText({ text, tones = true }) {
   return (
     <span lang="vi">
-      {text.split(/(\s+)/).map((part, i) => {
-        if (!hasLetters(part)) return part
-        const tone = TONES[detectTone(part)]
+      {splitWithPronouns(text).map((part, i) => {
+        if (part.space || !hasLetters(part.text)) return part.text
+        const tone = TONES[detectTone(part.text)]
+        const hints = []
+        if (tones) hints.push(`${tone.name} — ${tone.ru}`)
+        if (part.pronoun) hints.push(`обращение по возрасту: ${AGE_PRONOUNS[part.pronoun]}`)
         return (
           <span
             key={i}
-            className="border-b-2 pb-px"
-            style={{ borderColor: tone.color }}
-            title={`${tone.name} — ${tone.ru}`}
+            className={`${tones ? 'border-b-2 pb-px' : ''} ${part.pronoun ? 'rounded bg-amber-100 px-0.5' : ''}`}
+            style={tones ? { borderColor: tone.color } : undefined}
+            title={hints.join('\n') || undefined}
           >
-            {part}
+            {part.text}
           </span>
         )
       })}

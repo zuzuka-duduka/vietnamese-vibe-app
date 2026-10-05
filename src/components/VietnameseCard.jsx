@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { TONES, detectTone, toneKeyByName } from '../lib/tones.js'
 import SpeakButton from './SpeakButton.jsx'
-import { ToneSyllable } from './ToneText.jsx'
+import AgePronounNote from './AgePronounNote.jsx'
+import { ToneSyllable, ToneText } from './ToneText.jsx'
 
 const CATEGORY_LABELS = {
   greetings: 'Приветствия',
@@ -51,6 +52,8 @@ export default function VietnameseCard({
         <SpeakButton text={word_vi} label="Прослушать фразу" />
       </div>
 
+      <AgePronounNote text={word_vi} />
+
       {phonetic && <p className="mt-4 text-sm text-muted">{phonetic}</p>}
       <p className="mt-1 text-lg">{translation_ru}</p>
 
@@ -69,8 +72,11 @@ export default function VietnameseCard({
           {open && (
             <div className="mt-4 flex items-start justify-between gap-3 rounded-xl bg-paper p-4 text-sm">
               <div>
-                <p className="text-base font-medium" lang="vi">{sentenceVi}</p>
+                <p className="text-base font-medium">
+                  <ToneText text={sentenceVi} tones={false} />
+                </p>
                 {sentenceRu && <p className="mt-1 text-muted">{sentenceRu}</p>}
+                <AgePronounNote text={sentenceVi} />
               </div>
               <SpeakButton text={sentenceVi} label="Прослушать пример" size="sm" onPaper />
             </div>

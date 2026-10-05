@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { situations } from '../data/situations.js'
 import { MAX_AI_TURNS, parseReply } from '../lib/dialogue.js'
 import { fetchAiStatus, requestAiReply } from '../lib/ai.js'
+import AgePronounNote from './AgePronounNote.jsx'
 import Notice, { codeClass } from './Notice.jsx'
 import { ToneLegend, ToneText } from './ToneText.jsx'
 
@@ -44,6 +45,7 @@ function AiBubble({ reply }) {
         <div className="mt-2">
           <ToneLegend text={reply.vi} />
         </div>
+        <AgePronounNote text={reply.vi} />
         {reply.tip && (
           <p className="mt-3 rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-900">💡 {reply.tip}</p>
         )}
