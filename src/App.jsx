@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import DialoguePractice from './components/DialoguePractice.jsx'
 import Notice, { codeClass } from './components/Notice.jsx'
-import VietnameseCard from './components/VietnameseCard.jsx'
+import CategoryBrowser from './components/CategoryBrowser.jsx'
 import { demoWords } from './data/phrases.js'
+import { useVietnameseVoice } from './hooks/useVietnameseVoice.js'
 import { useVietnameseWords } from './hooks/useVietnameseWords.js'
 import { TONES } from './lib/tones.js'
 
@@ -10,8 +11,8 @@ const TABS = [
   {
     id: 'cards',
     label: 'Карточки',
-    title: 'В кафе и за едой',
-    intro: 'Базовые фразы, чтобы поздороваться, заказать кофе и фо. Цвет подчёркивания показывает тон каждого слога.',
+    title: 'Фразы на каждый день',
+    intro: 'Выберите тему и слушайте фразы носителя 🔊. Цвет подчёркивания показывает тон каждого слога.',
   },
   {
     id: 'practice',
@@ -23,6 +24,7 @@ const TABS = [
 
 function CardsTab({ status, words, error }) {
   const cards = status === 'unconfigured' ? demoWords : words
+  const voiceStatus = useVietnameseVoice()
   return (
     <>
       <section aria-label="Шесть тонов" className="mt-8 flex flex-wrap gap-2">
@@ -75,11 +77,19 @@ function CardsTab({ status, words, error }) {
         </p>
       )}
 
+      {voiceStatus === 'missing' && (
+        <Notice title="В системе нет вьетнамского голоса — озвучка может звучать неправильно">
+          <p>
+            Windows: Параметры → Время и язык → Речь → Добавить голоса → Tiếng Việt, затем перезапустите
+            браузер.
+          </p>
+          <p>Android и iPhone: настройки синтеза речи → загрузите вьетнамский язык. В Chrome и Edge голос обычно уже есть.</p>
+        </Notice>
+      )}
+
       {cards.length > 0 && (
-        <main className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {cards.map((word) => (
-            <VietnameseCard key={word.id} {...word} />
-          ))}
+        <main>
+          <CategoryBrowser words={cards} />
         </main>
       )}
     </>

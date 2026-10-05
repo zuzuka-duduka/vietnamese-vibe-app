@@ -74,3 +74,19 @@ values
   ('Cho tôi một cân xoài', 'nặng',  '[чо той мот кан соай]', 'Дайте мне килограмм манго',
    'Cho tôi một cân xoài chín nhé. — Дайте мне килограмм спелых манго.', 'shopping')
 on conflict (word_vi) do nothing;
+
+-- Транспорт и такси
+insert into public.vietnamese_words
+  (word_vi, tone_type, phonetic, translation_ru, pattern_sentence, category)
+values
+  ('Cho tôi đến khách sạn này', 'sắc',   '[чо той дэн кхак сан най]', 'Отвезите меня в этот отель',
+   'Anh ơi, cho tôi đến khách sạn này. — Отвезите меня, пожалуйста, в этот отель.', 'transport'),
+  ('Bao xa?',                   'ngang', '[бао са]',                  'Далеко?',
+   'Từ đây đến sân bay bao xa? — Далеко отсюда до аэропорта?', 'transport'),
+  ('Dừng ở đây',                'huyền', '[зынг о дэй]',              'Остановите здесь',
+   'Anh dừng ở đây giúp tôi nhé. — Остановите здесь, пожалуйста.', 'transport'),
+  ('Đi chậm thôi',              'nặng',  '[ди тям тхой]',             'Езжайте помедленнее',
+   'Anh ơi, đi chậm thôi! — Пожалуйста, помедленнее!', 'transport'),
+  ('Gọi xe ôm',                 'nặng',  '[гой сэ ом]',               'Вызвать мототакси',
+   'Tôi muốn gọi xe ôm đi chợ. — Я хочу вызвать мототакси до рынка.', 'transport')
+on conflict (word_vi) do nothing;

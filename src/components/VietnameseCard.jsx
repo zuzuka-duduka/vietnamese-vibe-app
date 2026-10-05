@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { TONES, detectTone, toneKeyByName } from '../lib/tones.js'
+import SpeakButton from './SpeakButton.jsx'
 import { ToneSyllable } from './ToneText.jsx'
 
 const CATEGORY_LABELS = {
@@ -7,6 +8,7 @@ const CATEGORY_LABELS = {
   coffee: 'Кофе',
   food: 'Еда',
   shopping: 'Покупки',
+  transport: 'Транспорт',
 }
 
 export default function VietnameseCard({
@@ -40,11 +42,14 @@ export default function VietnameseCard({
         )}
       </div>
 
-      <h2 className="mt-5 flex flex-wrap gap-x-3 gap-y-2 text-3xl font-semibold" lang="vi">
-        {syllables.map((s, i) => (
-          <ToneSyllable key={i} text={s} isFocus={detectTone(s) === focusKey} />
-        ))}
-      </h2>
+      <div className="mt-5 flex items-start justify-between gap-3">
+        <h2 className="flex flex-wrap gap-x-3 gap-y-2 text-3xl font-semibold" lang="vi">
+          {syllables.map((s, i) => (
+            <ToneSyllable key={i} text={s} isFocus={detectTone(s) === focusKey} />
+          ))}
+        </h2>
+        <SpeakButton text={word_vi} label="Прослушать фразу" />
+      </div>
 
       {phonetic && <p className="mt-4 text-sm text-muted">{phonetic}</p>}
       <p className="mt-1 text-lg">{translation_ru}</p>
@@ -62,9 +67,12 @@ export default function VietnameseCard({
           </button>
 
           {open && (
-            <div className="mt-4 rounded-xl bg-paper p-4 text-sm">
-              <p className="text-base font-medium" lang="vi">{sentenceVi}</p>
-              {sentenceRu && <p className="mt-1 text-muted">{sentenceRu}</p>}
+            <div className="mt-4 flex items-start justify-between gap-3 rounded-xl bg-paper p-4 text-sm">
+              <div>
+                <p className="text-base font-medium" lang="vi">{sentenceVi}</p>
+                {sentenceRu && <p className="mt-1 text-muted">{sentenceRu}</p>}
+              </div>
+              <SpeakButton text={sentenceVi} label="Прослушать пример" size="sm" onPaper />
             </div>
           )}
         </div>
