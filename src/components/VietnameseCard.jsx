@@ -9,6 +9,13 @@ import { ToneSyllable, ToneText } from './ToneText.jsx'
 const CARD_LABEL_OVERRIDES = { coffee: 'Кофе' }
 const cardLabel = (category) => CARD_LABEL_OVERRIDES[category] ?? categoryInfo(category).title
 
+// «вьетнамский — русский»: делим по первому тире с пробелами вокруг (—, – или -),
+// чтобы тире внутри перевода не обрезало его
+function splitPattern(pattern) {
+  const match = (pattern ?? '').match(/^(.*?)\s+[—–-]\s+(.*)$/s)
+  return match ? [match[1].trim(), match[2].trim()] : [(pattern ?? '').trim(), '']
+}
+
 export default function VietnameseCard({
   word_vi,
   tone_type,
@@ -22,7 +29,7 @@ export default function VietnameseCard({
   // Если тон в БД не распознан — берём тон первого слога
   const focusKey = toneKeyByName(tone_type) ?? detectTone(syllables[0])
   const focusTone = TONES[focusKey]
-  const [sentenceVi, sentenceRu] = (pattern_sentence ?? '').split(' — ')
+  const [sentenceVi, sentenceRu] = splitPattern(pattern_sentence)
 
   return (
     <article className="flex flex-col rounded-2xl border border-line bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
@@ -72,7 +79,11 @@ export default function VietnameseCard({
                 <p className="text-base font-medium">
                   <ToneText text={sentenceVi} tones={false} />
                 </p>
-                {sentenceRu && <p className="mt-1 text-muted">{sentenceRu}</p>}
+                {sentenceRu ? (
+                  <p className="mt-1 text-muted">{sentenceRu}</p>
+                ) : (
+                  <p className="mt-1 italic text-muted/70">Перевод пока не добавлен</p>
+                )}
                 <AgePronounNote text={sentenceVi} />
               </div>
               <SpeakButton text={sentenceVi} label="Прослушать пример" size="sm" onPaper />

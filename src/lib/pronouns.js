@@ -24,6 +24,7 @@ const normalize = (word) => word.toLowerCase().replace(/[^\p{L}]/gu, '')
 // bạn bè — «друзья», bạn trai / bạn gái — «парень / девушка», người bạn — «друг», một mình — «в одиночку»
 function isException(word, prev, next) {
   if (word === 'chú' && next === 'ý') return true
+  if (word === 'bác' && next === 'sĩ') return true // bác sĩ — «врач»
   if (word === 'anh' && ['tiếng', 'nước'].includes(prev)) return true
   if (word === 'bạn' && (['bè', 'trai', 'gái'].includes(next) || prev === 'người')) return true
   if (word === 'mình' && prev === 'một') return true
