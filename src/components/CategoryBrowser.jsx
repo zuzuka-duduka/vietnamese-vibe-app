@@ -16,7 +16,7 @@ function CategoryGrid({ groups, onOpen }) {
             className="group flex flex-col items-start rounded-2xl border border-line bg-white p-6 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-default disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-sm"
           >
             <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-paper text-3xl transition-transform group-hover:scale-110 group-disabled:scale-100">
-              {g.emoji}
+              {g.icon}
             </span>
             <span className="mt-4 text-lg font-semibold">{g.title}</span>
             <span className="mt-1 text-sm text-muted">{empty ? 'Скоро' : pluralPhrases(g.words.length)}</span>
@@ -39,7 +39,7 @@ function CategoryDetail({ group, onBack }) {
           ← Назад ко всем категориям
         </button>
         <h2 className="text-lg font-semibold">
-          {group.emoji} {group.title} <span className="text-muted">({group.words.length})</span>
+          {group.icon} {group.title} <span className="text-muted">({group.words.length})</span>
         </h2>
       </div>
 

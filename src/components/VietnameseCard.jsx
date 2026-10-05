@@ -1,16 +1,13 @@
 import { useState } from 'react'
+import { categoryInfo } from '../data/categories.js'
 import { TONES, detectTone, toneKeyByName } from '../lib/tones.js'
 import SpeakButton from './SpeakButton.jsx'
 import AgePronounNote from './AgePronounNote.jsx'
 import { ToneSyllable, ToneText } from './ToneText.jsx'
 
-const CATEGORY_LABELS = {
-  greetings: 'Приветствия',
-  coffee: 'Кофе',
-  food: 'Еда',
-  shopping: 'Покупки',
-  transport: 'Транспорт',
-}
+// Кофе живёт внутри «Еды и напитков», но на карточке полезно видеть, что это именно кофе
+const CARD_LABEL_OVERRIDES = { coffee: 'Кофе' }
+const cardLabel = (category) => CARD_LABEL_OVERRIDES[category] ?? categoryInfo(category).title
 
 export default function VietnameseCard({
   word_vi,
@@ -39,7 +36,7 @@ export default function VietnameseCard({
           {focusTone.name} · {focusTone.ru}
         </span>
         {category && (
-          <span className="text-xs text-muted">{CATEGORY_LABELS[category] ?? category}</span>
+          <span className="text-right text-xs text-muted">{cardLabel(category)}</span>
         )}
       </div>
 

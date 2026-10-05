@@ -1,26 +1,53 @@
-// Разделы карточек. dbCategories — какие значения category из таблицы vietnamese_words входят в раздел.
-export const categoryGroups = [
-  { id: 'food', emoji: '🍜', title: 'Еда и напитки', dbCategories: ['food', 'coffee'] },
-  { id: 'greetings', emoji: '👋', title: 'Приветствия', dbCategories: ['greetings'] },
-  { id: 'shopping', emoji: '🛍️', title: 'Покупки', dbCategories: ['shopping'] },
-  { id: 'transport', emoji: '🛵', title: 'Транспорт и такси', dbCategories: ['transport'] },
-]
+// Словарь категорий: ключ — значение поля category в таблице vietnamese_words.
+// includes — дополнительные категории из базы, которые показываются внутри этого раздела.
+export const CATEGORY_DICTIONARY = {
+  food: { title: 'Еда и напитки', icon: '🍲', includes: ['coffee'] },
+  transport: { title: 'Транспорт и такси', icon: '🚖' },
+  shopping: { title: 'Покупки и рынок', icon: '🛍️' },
+  greetings: { title: 'Приветствия и знакомство', icon: '👋' },
+  numbers_money: { title: 'Числа и деньги', icon: '💵' },
+  pharmacy_health: { title: 'Аптека и здоровье', icon: '💊' },
+  hotel: { title: 'Отель и жильё', icon: '🏨' },
+  navigation: { title: 'Навигация и город', icon: '🗺️' },
+}
 
-// Раскладывает слова по разделам. Категории из базы, которых нет в списке выше,
-// получают собственный раздел-папку, чтобы ни одна фраза не потерялась.
+const DEFAULT_ICON = '📌'
+
+// rental_bike → Rental bike
+export function formatCategoryName(category) {
+  const text = String(category).replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim()
+  return text.charAt(0).toUpperCase() + text.slice(1)
+}
+
+// Название и иконка категории; для неизвестных — отформатированное имя и 📌
+export function categoryInfo(category) {
+  const entry = CATEGORY_DICTIONARY[category]
+  return entry
+    ? { title: entry.title, icon: entry.icon }
+    : { title: formatCategoryName(category), icon: DEFAULT_ICON }
+}
+
+// Раскладывает слова по разделам: сначала все разделы словаря (пустые — тоже, с пометкой «Скоро»),
+// затем категории из базы, которых в словаре пока нет.
 export function groupWords(words) {
-  const known = new Set(categoryGroups.flatMap((g) => g.dbCategories))
-  const groups = categoryGroups.map((g) => ({
-    ...g,
-    words: words.filter((w) => g.dbCategories.includes(w.category)),
-  }))
-  const extra = [...new Set(words.map((w) => w.category).filter((c) => c && !known.has(c)))]
-  for (const category of extra) {
+  const groups = Object.entries(CATEGORY_DICTIONARY).map(([id, entry]) => {
+    const dbCategories = [id, ...(entry.includes ?? [])]
+    return {
+      id,
+      title: entry.title,
+      icon: entry.icon,
+      words: words.filter((w) => dbCategories.includes(w.category)),
+    }
+  })
+
+  const known = new Set(
+    Object.entries(CATEGORY_DICTIONARY).flatMap(([id, entry]) => [id, ...(entry.includes ?? [])]),
+  )
+  const unknown = [...new Set(words.map((w) => w.category).filter((c) => c && !known.has(c)))]
+  for (const category of unknown) {
     groups.push({
       id: category,
-      emoji: '📁',
-      title: category,
-      dbCategories: [category],
+      ...categoryInfo(category),
       words: words.filter((w) => w.category === category),
     })
   }
