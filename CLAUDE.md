@@ -122,6 +122,10 @@ supabase_add_translations.sql  миграция данных
 3. `git push` в `main` → Vercel пересобирает сайт (~30 с) → проверить опубликованную версию.
 4. Изменения данных — SQL-скрипт в корне репозитория; выполняет владелец в Supabase SQL Editor.
 
+## Агент пополнения базы
+
+Скилл [`.claude/skills/words-agent/SKILL.md`](.claude/skills/words-agent/SKILL.md): через Supabase MCP находит категорию с наименьшим числом фраз, генерирует 5 новых, проверяет валидатором `node scripts/validate-words.mjs batch.json existing.json` (формат, тон есть в слогах, транскрипция, дубликаты, возрастные обращения) и записывает только `insert … on conflict do nothing`. `update`/`delete`/изменения схемы агент не делает.
+
 ## Известные особенности окружения (Windows)
 
 - Терминал, открытый до установки Node.js, не видит `npm` — открыть новый.
